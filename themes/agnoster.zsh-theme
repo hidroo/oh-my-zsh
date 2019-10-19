@@ -89,7 +89,7 @@ prompt_end() {
 # Context: user@hostname (who am I and where am I)
 prompt_context() {
   if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)%n@%m"
+    prompt_segment black default "%(!.%{%F{12}%}.)\U1f919 %n"
   fi
 }
 
@@ -111,7 +111,7 @@ prompt_git() {
     dirty=$(parse_git_dirty)
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
     if [[ -n $dirty ]]; then
-      prompt_segment yellow black
+      prompt_segment 12 black 
     else
       prompt_segment green $CURRENT_FG
     fi
@@ -146,11 +146,11 @@ prompt_bzr() {
         status_all=`bzr status | head -n1 | wc -m`
         revision=`bzr log | head -n2 | tail -n1 | sed 's/^revno: //'`
         if [[ $status_mod -gt 0 ]] ; then
-            prompt_segment yellow black
+            prompt_segment 12 black
             echo -n "bzr@"$revision "✚ "
         else
             if [[ $status_all -gt 0 ]] ; then
-                prompt_segment yellow black
+                prompt_segment 12 black
                 echo -n "bzr@"$revision
             else
                 prompt_segment green black
@@ -171,7 +171,7 @@ prompt_hg() {
         st='±'
       elif [[ -n $(hg prompt "{status|modified}") ]]; then
         # if any modification
-        prompt_segment yellow black
+        prompt_segment 12 black
         st='±'
       else
         # if working copy is clean
@@ -186,7 +186,7 @@ prompt_hg() {
         prompt_segment red black
         st='±'
       elif `hg st | grep -q "^[MA]"`; then
-        prompt_segment yellow black
+        prompt_segment 12 black
         st='±'
       else
         prompt_segment green $CURRENT_FG
@@ -198,14 +198,14 @@ prompt_hg() {
 
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment blue $CURRENT_FG '%~'
+  prompt_segment 33 $CURRENT_FG '%~'
 }
 
 # Virtualenv: current working virtualenv
 prompt_virtualenv() {
   local virtualenv_path="$VIRTUAL_ENV"
   if [[ -n $virtualenv_path && -n $VIRTUAL_ENV_DISABLE_PROMPT ]]; then
-    prompt_segment blue black "(`basename $virtualenv_path`)"
+    prompt_segment 33 black "(`basename $virtualenv_path`)"
   fi
 }
 
@@ -217,7 +217,7 @@ prompt_status() {
   local -a symbols
 
   [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
+  [[ $UID -eq 0 ]] && symbols+="%{%F{12}%}⚡"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
 
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
@@ -225,13 +225,13 @@ prompt_status() {
 
 #AWS Profile:
 # - display current AWS_PROFILE name
-# - displays yellow on red if profile name contains 'production' or
+# - displays 12 on red if profile name contains 'production' or
 #   ends in '-prod'
 # - displays black on green otherwise
 prompt_aws() {
   [[ -z "$AWS_PROFILE" ]] && return
   case "$AWS_PROFILE" in
-    *-prod|*production*) prompt_segment red yellow  "AWS: $AWS_PROFILE" ;;
+    *-prod|*production*) prompt_segment red 12  "AWS: $AWS_PROFILE" ;;
     *) prompt_segment green black "AWS: $AWS_PROFILE" ;;
   esac
 }
